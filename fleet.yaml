@@ -1,10 +1,10 @@
-defaultNamespace: bitwarden-system
+defaultNamespace: sm-operator-system 
 
 helm:
   repo: https://charts.bitwarden.com
   chart: sm-operator
   version: "0.1.0"
-  releaseName: bw-operator
+  releaseName: sm-operator
   valuesFiles:
     - values.yaml
   timeoutSeconds: 300
