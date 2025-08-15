@@ -3,7 +3,7 @@ defaultNamespace: bitwarden-system
 helm:
   repo: https://charts.bitwarden.com
   chart: sm-operator
-  version: "0.3.0"
+  version: "0.1.0"
   releaseName: bitwarden-secrets-operator
   valuesFiles:
     - values.yaml
