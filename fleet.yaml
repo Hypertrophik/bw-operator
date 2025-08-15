@@ -1,4 +1,4 @@
-defaultNamespace: sm-operator-system 
+defaultNamespace: sm-operator-system
 
 helm:
   repo: https://charts.bitwarden.com
@@ -7,12 +7,13 @@ helm:
   releaseName: sm-operator
   valuesFiles:
     - values.yaml
+  devel: true
   timeoutSeconds: 300
 
 targets:
 - name: all-clusters
   clusterSelector: {}
-  
+
 diff:
   comparePatches:
   - apiVersion: apps/v1
