@@ -4,7 +4,7 @@ helm:
   repo: https://charts.bitwarden.com
   chart: sm-operator
   version: "0.1.0"
-  releaseName: bitwarden-secrets-operator
+  releaseName: bw-operator
   valuesFiles:
     - values.yaml
   timeoutSeconds: 300
