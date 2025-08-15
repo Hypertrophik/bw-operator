@@ -1,0 +1,32 @@
+defaultNamespace: sm-operator-system
+
+helm:
+  repo: https://charts.bitwarden.com
+  chart: sm-operator
+  version: "0.3.0"
+  releaseName: bitwarden-secrets-operator
+  
+  # Apply values from our custom values file
+  valuesFiles:
+    - values.yaml
+    
+  # Wait for deployment to be ready
+  wait: true
+  timeout: 600s
+  
+  # Force Helm to wait for jobs and deployments
+  waitForJobs: true
+
+# Create namespace first
+diff:
+  comparePatches:
+  - apiVersion: v1
+    kind: Namespace
+    name: sm-operator-system
+    operations:
+    - {"op": "add", "path": "/metadata/labels", "value": {"name": "sm-operator-system"}}
+
+# Target all clusters - adjust selector as needed for your setup
+targets:
+- name: all-clusters
+  clusterSelector: {}

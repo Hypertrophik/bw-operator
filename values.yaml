@@ -1,0 +1,59 @@
+namespaceOverride: sm-operator-system
+
+# Operator controller configuration
+containers:
+  manager:
+    image:
+      repository: bitwarden/sm-operator
+      tag: "0.3.0"
+      pullPolicy: IfNotPresent
+    
+    # Resource limits appropriate for k3s
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    
+    # Environment variables for operator behavior
+    env:
+      # Sync interval in seconds (minimum 180, recommend 300 for start)
+      BW_SECRETS_MANAGER_REFRESH_INTERVAL: "300"
+      
+      # Uncomment for self-hosted Bitwarden instances
+      # BW_API_URL: "https://your-bitwarden.domain.com/api"
+      # BW_IDENTITY_API_URL: "https://your-bitwarden.domain.com/identity"
+      
+      # Path for SDK state files (default is fine)
+      # BW_SECRETS_MANAGER_STATE_PATH: "/tmp/bw-state"
+
+# RBAC configuration - needed for cluster-wide secret management
+rbac:
+  create: true
+  # Enable cluster-wide permissions to manage secrets in any namespace
+  clusterRole: true
+
+# Service account for the operator
+serviceAccount:
+  create: true
+  name: bitwarden-operator
+  # Add annotations if needed (e.g., for IRSA, Workload Identity)
+  annotations: {}
+
+# Pod security configuration
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  fsGroup: 65534
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65534
+  capabilities:
+    drop:
+    - ALL

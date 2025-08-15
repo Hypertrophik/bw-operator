@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sm-operator-system
+  labels:
+    name: sm-operator-system
+    app.kubernetes.io/name: bitwarden-secrets-operator
+    app.kubernetes.io/component: namespace
+  annotations:
+    fleet.cattle.io/managed: "true"
