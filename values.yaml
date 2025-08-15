@@ -1,59 +1,64 @@
-namespaceOverride: sm-operator-system
+# values.yaml - Bitwarden Secrets Manager Operator configuration
 
-# Operator controller configuration
-containers:
-  manager:
-    image:
-      repository: bitwarden/sm-operator
-      tag: "0.3.0"
-      pullPolicy: IfNotPresent
-    
-    # Resource limits appropriate for k3s
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 256Mi
-    
-    # Environment variables for operator behavior
-    env:
-      # Sync interval in seconds (minimum 180, recommend 300 for start)
-      BW_SECRETS_MANAGER_REFRESH_INTERVAL: "300"
-      
-      # Uncomment for self-hosted Bitwarden instances
-      # BW_API_URL: "https://your-bitwarden.domain.com/api"
-      # BW_IDENTITY_API_URL: "https://your-bitwarden.domain.com/identity"
-      
-      # Path for SDK state files (default is fine)
-      # BW_SECRETS_MANAGER_STATE_PATH: "/tmp/bw-state"
+# Operator configuration
+operator:
+  image:
+    repository: bitwarden/sm-operator
+    tag: "0.3.0"
+    pullPolicy: IfNotPresent
+  
+  # Resource limits
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  
+  # Number of operator replicas
+  replicaCount: 1
+  
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
 
-# RBAC configuration - needed for cluster-wide secret management
-rbac:
-  create: true
-  # Enable cluster-wide permissions to manage secrets in any namespace
-  clusterRole: true
-
-# Service account for the operator
+# Service account configuration
 serviceAccount:
   create: true
-  name: bitwarden-operator
-  # Add annotations if needed (e.g., for IRSA, Workload Identity)
   annotations: {}
+  name: ""
 
-# Pod security configuration
+# RBAC configuration
+rbac:
+  create: true
+
+# Webhook configuration (if needed)
+webhook:
+  enabled: true
+  port: 9443
+  
+# Metrics configuration
+metrics:
+  enabled: true
+  port: 8080
+  
+# Health check configuration
+health:
+  enabled: true
+  port: 8081
+
+# Node selector and tolerations (optional)
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Pod annotations
+podAnnotations: {}
+
+# Pod security context
 podSecurityContext:
-  runAsNonRoot: true
-  runAsUser: 65534
-  runAsGroup: 65534
-  fsGroup: 65534
-
-securityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
-  runAsNonRoot: true
-  runAsUser: 65534
-  capabilities:
-    drop:
-    - ALL
+  fsGroup: 1000

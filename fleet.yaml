@@ -1,4 +1,4 @@
-defaultNamespace: sm-operator-system
+defaultNamespace: bitwarden-system
 
 helm:
   repo: https://charts.bitwarden.com
@@ -7,7 +7,20 @@ helm:
   releaseName: bitwarden-secrets-operator
   valuesFiles:
     - values.yaml
+  timeoutSeconds: 300
 
 targets:
 - name: all-clusters
   clusterSelector: {}
+  
+diff:
+  comparePatches:
+  - apiVersion: apps/v1
+    kind: Deployment
+    operations:
+    - {"op": "remove", "path": "/spec/template/spec/containers/0/resources/limits"}
+
+ignore:
+  conditions:
+  - type: "Progressing"
+    status: "Unknown"
